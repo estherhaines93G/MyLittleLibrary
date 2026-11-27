@@ -25,17 +25,17 @@ jobs:
       - name: Unpack Android project
         run: unzip -q MyLittleLibraryAndroid.zip -d project
 
-      - name: Find and build Android project
-        run: |
-          GRADLEW=$(find project -type f -name gradlew -print -quit)
-          if [ -z "$GRADLEW" ]; then
-            echo "Gradle wrapper not found in ZIP"
-            exit 1
-          fi
-          PROJECT_DIR=$(dirname "$GRADLEW")
-          cd "$PROJECT_DIR"
-          chmod +x gradlew
-          ./gradlew --no-daemon assembleDebug
+      
+      
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+
+      - name: Build Android APK
+        run: gradle -p project :app:assembleDebug
+        
+      
 
       - name: Save APK for download
         uses: actions/upload-artifact@v4
