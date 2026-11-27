@@ -21,10 +21,10 @@ jobs:
     runs-on: ubuntu-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/steps:
-  - uses: actions/checkout@v7
+    
+      steps:
+  # Checks-out your repository
+  - uses: actions/checkout@v4
   
 
       # Runs a single command using the runners shell
