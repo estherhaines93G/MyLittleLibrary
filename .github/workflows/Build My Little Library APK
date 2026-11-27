@@ -25,7 +25,9 @@ jobs:
 
       - name: Unpack Android project
         run: unzip -o MyLittleLibraryAndroid.zip -d project
-
+      - name: Fix Java version
+         run: |
+            find project -type f \( -name "build.gradle" -o -name "build.gradle.kts" \) -exec sed -i 's/VERSION_1_8/VERSION_17/g' {} +
       - name: Build Android APK
         run: gradle -p project :app:assembleDebug
 
