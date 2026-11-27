@@ -11,7 +11,9 @@ jobs:
 
     steps:
       - name: Download project
-        uses: actions/checkout@v4
+        uses: 
+steps:
+  - uses: actions/checkout@v7
 
       - name: Set up Java
         uses: actions/setup-java@v4
