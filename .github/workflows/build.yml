@@ -62,7 +62,8 @@ jobs:
           fi
 
       - name: Build Android APK
-        run: gradle -p project :app:assembleDebug
+        run: gradle -p project :app:assembleDebug --stacktrace
+         :app:assembleDebug
 
       - name: Save APK for download
         uses: actions/upload-artifact@v4
