@@ -1,38 +1,35 @@
-
-name: Build My Little Library APK
-
-on:
-  workflow_dispatch:
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Download project
-        uses: actions/checkout@v4
-
-      - name: Set up Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '17'
-
-      - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: '8.9'
-
-      - name: Unpack Android project
+      - name: Fix Java version
         run: |
-          unzip MyLittleLibraryAndroid.zip -d project
+          if [ -f project/app/build.gradle.kts ]; then
+            FILE="project/app/build.gradle.kts"
+            cat << 'EOF' >> "$FILE"
 
-      - name: Build Android APK
-        run: gradle -p project :app:assembleDebug
+          android {
+              compileOptions {
+                  sourceCompatibility = JavaVersion.VERSION_17
+                  targetCompatibility = JavaVersion.VERSION_17
+              }
+          }
+          kotlin {
+              jvmToolchain(17)
+          }
+          EOF
+          elif [ -f project/app/build.gradle ]; then
+            FILE="project/app/build.gradle"
+            cat << 'EOF' >> "$FILE"
 
-      - name: Save APK for download
-        uses: actions/upload-artifact@v4
-        with:
-          name: MyLittleLibrary-APK
-          path: project/app/build/outputs/apk/debug/*.apk
-          
+          android {
+              compileOptions {
+                  sourceCompatibility JavaVersion.VERSION_17
+                  targetCompatibility JavaVersion.VERSION_17
+              }
+          }
+          kotlin {
+              jvmToolchain(17)
+          }
+          EOF
+          else
+            echo "Could not find app build file! Folder contents:"
+            find project -maxdepth 3
+            exit 1
+          fi
